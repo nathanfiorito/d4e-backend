@@ -17,7 +17,7 @@ export class User extends BaseEntity {
     @Column()
     salt: string
 
-    @OneToMany(type => Survey, survey => survey.user, {eager: true})
+    @OneToMany(type => Survey, survey => survey.user, {eager: true, cascade: true})
     surveys: Survey[];
 
     async validatePassword(password: string): Promise<Boolean>{

@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { typeOrmConfig } from './config/typeorm.config';
 import { SurveyModule } from './survey/survey.module';
+import { VoteModule } from './vote/vote.module';
 import { VoteOptionModule } from './voteOption/voteOption.module';
 
 @Module({
@@ -10,7 +11,8 @@ import { VoteOptionModule } from './voteOption/voteOption.module';
     TypeOrmModule.forRoot(typeOrmConfig),
     AuthModule,
     SurveyModule,
-    VoteOptionModule
+    VoteOptionModule,
+    VoteModule
   ]
 })
 export class AppModule {}

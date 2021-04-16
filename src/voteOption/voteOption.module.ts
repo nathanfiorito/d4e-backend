@@ -14,7 +14,8 @@ import { SurveyModule } from '../survey/survey.module';
         SurveyModule
     ],
     controllers: [VoteOptionController],
-    providers: [VoteOptionService]
+    providers: [VoteOptionService],
+    exports: [VoteOptionService]
 })
 
 export class VoteOptionModule{}

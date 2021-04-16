@@ -1,30 +1,36 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { VoteOption } from './voteOption.entity';
-import { User } from '../auth/user.entity';
 import { Survey } from '../survey/survey.entity';
 import { CreateVoteOptionDTO } from './dto/create-vote-option.dto';
 import { InternalServerErrorException } from '@nestjs/common';
-import { SurveyService } from 'src/survey/survey.service';
 
 @EntityRepository(VoteOption)
 export class VoteOptionRepository extends Repository<VoteOption>{
-    constructor(private surveyService: SurveyService){
-        super();
+    async getVoteOptions(survey: Survey): Promise<VoteOption[]>{
+        const query = this.createQueryBuilder('voteOption');
+
+        query.where('voteOption.surveyId = :surveyId',{surveyId: survey.id})
+        
+        try{
+            const voteOptions = await query.getMany();
+
+            return voteOptions
+        } catch(error){
+            throw new InternalServerErrorException();
+        }
     }
 
-    async createVoteOption(createVoteOptionDTO: CreateVoteOptionDTO, surveyId: number, user: User){
-        const survey = await this.surveyService.getSurveyById(surveyId, user)
+    async createVoteOption(createVoteOptionDTO: CreateVoteOptionDTO, survey: Survey){
         const { voteOptionName, image } = createVoteOptionDTO;
-        
+
         const voteOption = new VoteOption();
 
         voteOption.voteOptionName = voteOptionName;
         voteOption.image = image;
         voteOption.survey = survey;
-
+        
         try{
             await voteOption.save()
-            this.surveyService.updateSurveyVoteOptions(voteOption, surveyId, user)
         } catch(error){
             throw new InternalServerErrorException();
         }
