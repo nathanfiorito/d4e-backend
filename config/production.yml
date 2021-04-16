@@ -1,6 +1,2 @@
 db:
-    host: 'ec2-34-195-233-155.compute-1.amazonaws.com'
-    database: 'dce3cnb6ukjnb0'
-    username: 'fveeandgigpgqm'
-    password: '28da8d69c361ffb05f2a651991f72d90ee3b0e056ce7704605564f48c5b55457'
     synchronize: false
