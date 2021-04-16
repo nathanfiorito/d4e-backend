@@ -1,14 +1,16 @@
 import { SurveyStatus } from './survey-status.enum';
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { GetSurveysFilterDTO } from './dto/get-surveys-filter.dto';
-import { User as GetUser } from 'src/auth/get-user.decoratos';
+import { GetUser } from 'src/auth/get-user.decoratos';
 import { User } from 'src/auth/user.entity';
 import { Survey } from './survey.entity';
 import { CreateSurveyDTO } from './dto/create-survey.dto';
 import { SurveyStatusValidationPipe } from './pipe/survey-status-validation.pipe';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('surveys')
+@UseGuards(AuthGuard()) //ISSO É MT IMPORTANTE QUANDO FOR AUTORIZAR ALGO!!!!!!!!!!!
 export class SurveyController{
     constructor(private surveyService: SurveyService){}
 
@@ -17,17 +19,16 @@ export class SurveyController{
         return this.surveyService.getSurveys(filterDTO, user);
     }
 
-    @Get('/porra')
-    getUserId(@GetUser() user: User){
-        console.log(user)
+
+    @Get(':id')
+    getSurveyById(@Param('id', ParseIntPipe) id: number, @GetUser() user: User): Promise<Survey>{
+        return this.surveyService.getSurveyById(id, user);
     }
 
     @Post()
     @UsePipes(ValidationPipe)
-    createSurvey(@GetUser() user: User){
-        return console.log(user)
-        //@Body() createSurveyDTO: CreateSurveyDTO, 
-        //return this.surveyService.createSurvey(createSurveyDTO, user);
+    createSurvey(@Body() createSurveyDTO: CreateSurveyDTO, @GetUser() user: User){
+        return this.surveyService.createSurvey(createSurveyDTO, user);
     }
 
     @Patch(':id/status')

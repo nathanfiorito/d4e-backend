@@ -11,7 +11,8 @@ import { Module } from '@nestjs/common';
         AuthModule
     ],
     controllers: [SurveyController],
-    providers: [SurveyService]
+    providers: [SurveyService],
+    exports: [SurveyService]
 })
 
 export class SurveyModule{}

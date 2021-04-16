@@ -6,6 +6,7 @@ import { User } from "src/auth/user.entity";
 import { Survey } from "./survey.entity";
 import { SurveyStatus } from './survey-status.enum';
 import { CreateSurveyDTO } from './dto/create-survey.dto';
+import { VoteOption } from "src/voteOption/voteOption.entity";
 
 @Injectable()
 export class SurveyService {
@@ -35,7 +36,13 @@ export class SurveyService {
         survey.status = status;
         await survey.save();
         return survey;
+    }
 
+    async updateSurveyVoteOptions(voteOption: VoteOption, id: number, user: User){
+        const survey = await this.getSurveyById(id, user);
+        survey.voteOptions.push(voteOption);
+        await survey.save();
+        return survey;
     }
 
     async deleteSurvey(id: number, user: User): Promise<void>{

@@ -5,8 +5,10 @@ import { Survey } from './survey.entity';
 import { InternalServerErrorException } from '@nestjs/common';
 import { CreateSurveyDTO } from './dto/create-survey.dto';
 import { SurveyStatus } from './survey-status.enum';
+import { AuthGuard } from '@nestjs/passport';
 
 @EntityRepository(Survey)
+
 export class SurveyRepository extends Repository<Survey>{
 
     async getSurveys(filterDTO: GetSurveysFilterDTO, user: User): Promise<Survey[]>{
@@ -39,13 +41,11 @@ export class SurveyRepository extends Repository<Survey>{
         survey.title = title;
         survey.description = description;
         survey.status = SurveyStatus.NOT_STARTED;
-        //survey.voteOptions = voteOptions;
         survey.user = user;
         
         try{
             await survey.save()
         } catch(error){
-            console.log(error)
             throw new InternalServerErrorException();
         }
 
